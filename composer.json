@@ -1,0 +1,77 @@
+{
+    "name": "adamculp/doctrine-expressive-example",
+    "description": "This is an example application using Zend Expressive and Doctrine ORM connecting to a MySQL DB.",
+    "type": "project",
+    "homepage": "https://geekyboy.com",
+    "license": "BSD-3",
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "zf": {
+            "component-whitelist": [
+                "zendframework/zend-expressive",
+                "zendframework/zend-expressive-helpers",
+                "zendframework/zend-expressive-router",
+                "zendframework/zend-httphandlerrunner",
+                "zendframework/zend-expressive-fastroute"
+            ]
+        }
+    },
+    "require": {
+        "php": "^7.1",
+        "dasprid/container-interop-doctrine": "1.1.0",
+        "doctrine/dbal": "^2.8",
+        "doctrine/orm": "^2.6",
+        "zendframework/zend-component-installer": "^2.1.1",
+        "zendframework/zend-config-aggregator": "^1.0",
+        "zendframework/zend-diactoros": "^1.7.1",
+        "zendframework/zend-expressive": "^3.0.1",
+        "zendframework/zend-expressive-fastroute": "^3.0",
+        "zendframework/zend-expressive-helpers": "^5.0",
+        "zendframework/zend-servicemanager": "^3.3",
+        "zendframework/zend-stdlib": "^3.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0.1",
+        "roave/security-advisories": "dev-master",
+        "squizlabs/php_codesniffer": "^2.9.1",
+        "zendframework/zend-expressive-tooling": "^1.0",
+        "zfcampus/zf-development-mode": "^3.1",
+        "filp/whoops": "^2.1.12"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/App/src/",
+            "Branches\\": "src/Branches/src/",
+            "Announcements\\": "src/Announcements/src/",
+            "Banks\\": "src/Banks/src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AppTest\\": "test/AppTest/"
+        }
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "@development-enable"
+        ],
+        "development-disable": "zf-development-mode disable",
+        "development-enable": "zf-development-mode enable",
+        "development-status": "zf-development-mode status",
+        "expressive": "expressive --ansi",
+        "check": [
+            "@cs-check",
+            "@test",
+            "@analyze"
+        ],
+        "analyze": "phpstan analyze -l max -c ./phpstan.installer.neon ./src ./config",
+        "clear-config-cache": "php bin/clear-config-cache.php",
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "serve": "php -S 0.0.0.0:8080 -t public/",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    }
+}
