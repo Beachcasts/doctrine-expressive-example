@@ -1,7 +1,7 @@
 # doctrine-expressive-example
 Example PHP REST API application spread across 2 Docker containers. (1=Apache, 2=MySQL) I used [Zend Expressive](https://docs.zendframework.com/zend-expressive/) with [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) in an effort to help document usage of both in a typical scenario.
 
-The Doctrine Entities also include example usage of [Associations](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/association-mapping.html#association-mapping) between Entities (see the OneToMany association in [Bank](../src/Banks/src/Entity/Bank.php) using ArrayCollection to ManyToOne association in [Branch](../src/Branches/src/Entity/Branch.php)) as well as parent-child relationships within the same Entity (See the Bank associations - ManyToOne $parent and OneToMany $children using ArrayCollection).
+The Doctrine Entities also include example usage of [Associations](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/association-mapping.html#association-mapping) between Entities (see the OneToMany association in [Bank](/src/Banks/src/Entity/Bank.php) using ArrayCollection to ManyToOne association in [Branch](/src/Branches/src/Entity/Branch.php)) as well as parent-child relationships within the same Entity (See the Bank associations - ManyToOne $parent and OneToMany $children using ArrayCollection).
 
 ## Knowledge shared through example
 
