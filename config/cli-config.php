@@ -3,6 +3,8 @@
  * This file is used with the Doctrine CLI console, which is accessed from the application root.
  *
  * $ php vendor/bin/doctrine list
+ * 
+ * Or if using Docker container gain shell access first.
  */
 
 use Doctrine\ORM\EntityManager;

@@ -22,12 +22,13 @@ In addition to these endpoints the hypermedia in each response provides informat
 
 Also, the Zend Expressive CLI and Doctrine CLI commands are available by gaining the terminal from Docker.
 
-`$ docker exec -i -t {container-id} bash`
+`docker exec -i -t {container-id} bash`
 
 Change {container-id} with the Docker container ID.
 
 Then CLI tools are available:
 
-* `$ php vendor/bin/doctrine list`
-* `$ php vendor/bin/doctrine-dbal list`
-* `$ php vendor/bin/expressive`
+* `php vendor/bin/doctrine list`
+* `php vendor/bin/doctrine-dbal list`
+* `php vendor/bin/expressive`
+* or `php vendor/doctrine/bin/doctrine list`
