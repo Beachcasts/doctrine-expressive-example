@@ -1,6 +1,6 @@
 {
     "name": "adamculp/doctrine-expressive-example",
-    "description": "This is an example application using Zend Expressive and Doctrine ORM connecting to a MySQL DB.",
+    "description": "Example PHP REST API application built with Zend Expressive and Doctrine ORM, complete with associations, pagination, and DB connectivity using Docker containers.",
     "type": "project",
     "homepage": "https://geekyboy.com",
     "license": "BSD-3",
