@@ -26,9 +26,11 @@ In addition to these endpoints the hypermedia in each response provides informat
 ## CLI Tools
 Also, the Zend Expressive CLI and Doctrine CLI commands are available by gaining the terminal from Docker.
 
+Get the container IDs:
+`docker ps`
 `docker exec -i -t {container-id} bash`
 
-Change {container-id} with the Docker container ID.
+Change {container-id} with the Docker container ID from the `docker ps`.
 
 Then CLI tools are available:
 
