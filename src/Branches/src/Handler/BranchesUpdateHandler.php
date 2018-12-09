@@ -15,6 +15,9 @@ use Zend\Diactoros\Response\JsonResponse;
 
 /**
  * Class BranchesUpdateHandler
+ *
+ * Example request body to update can be found in /data/branch_update.json
+ *
  * @package Branches\Handler
  */
 class BranchesUpdateHandler implements RequestHandlerInterface

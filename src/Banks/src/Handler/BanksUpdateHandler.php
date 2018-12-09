@@ -15,6 +15,9 @@ use Zend\Diactoros\Response\JsonResponse;
 
 /**
  * Class BanksUpdateHandler
+ *
+ * Example request body to update can be found in /data/bank_update.json
+ *
  * @package Banks\Handler
  */
 class BanksUpdateHandler implements RequestHandlerInterface

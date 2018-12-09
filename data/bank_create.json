@@ -1,0 +1,19 @@
+{"Request":{
+    "Banks":
+    {
+        "parent_id": 0,
+        "name": "Test Company",
+        "phone": "555-555-5555",
+        "fax": "666-666-6666",
+        "address1": "55 Any Street",
+        "address2": "Suite 100",
+        "city": "Wellington",
+        "zone_id": 18,
+        "zip": "33496",
+        "product_1_price": 8.50,
+        "product_2_price": 7.80,
+        "allow_email_attachment": 1,
+        "is_active": 1,
+        "created": "2011-06-04 00:26:43.000000",
+        "modified": "2011-12-29 14:19:29.000000"
+    }}}

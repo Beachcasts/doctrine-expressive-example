@@ -15,6 +15,9 @@ use Zend\Diactoros\Response\JsonResponse;
 
 /**
  * Class AnnouncementsUpdateHandler
+ *
+ * Example request body to update can be found in /data/announcement_update.json
+ *
  * @package Announcements\Handler
  */
 class AnnouncementsUpdateHandler implements RequestHandlerInterface

@@ -14,6 +14,9 @@ use Zend\Diactoros\Response\JsonResponse;
 
 /**
  * Class BanksCreateHandler
+ *
+ * Example request body to create can be found in /data/bank_create.json
+ *
  * @package Banks\Handler
  */
 class BanksCreateHandler implements RequestHandlerInterface

@@ -14,6 +14,9 @@ use Zend\Diactoros\Response\JsonResponse;
 
 /**
  * Class AnnouncementsCreateHandler
+ *
+ * Example request body to create can be found in /data/announcement_create.json
+ *
  * @package Announcements\Handler
  */
 class AnnouncementsCreateHandler implements RequestHandlerInterface

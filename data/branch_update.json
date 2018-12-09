@@ -1,0 +1,14 @@
+{"Request":{
+    "Branches":
+    {
+        "bank_id": 2,
+        "name": "Test Company AGAIN",
+        "address1": "55 Any Street",
+        "address2": "Suite 100",
+        "city": "Wellington",
+        "zone_id": 18,
+        "zip": "33496",
+        "email": "test@home.com",
+        "phone": "555-555-5555",
+        "is_active": 1
+    }}}

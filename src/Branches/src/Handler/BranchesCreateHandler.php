@@ -15,6 +15,9 @@ use Zend\Diactoros\Response\JsonResponse;
 
 /**
  * Class BranchesCreateHandler
+ *
+ * Example request body to create can be found in /data/branch_create.json
+ *
  * @package Branches\Handler
  */
 class BranchesCreateHandler implements RequestHandlerInterface
