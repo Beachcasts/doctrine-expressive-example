@@ -25,12 +25,14 @@ The Doctrine Entities also include example usage of [Associations](https://www.d
 ## Installation
 
 * Step 1 - Clone this repo to desired location
-* Step 2 - Run docker-compose
-* Step 3 - copy/rename the following config files
+* Step 2 - Change directory to newly cloned repo via CLI `cd /new/cloned/location`
+* Step 3 - Run docker-compose `docker-compose up -d`
+* Step 4 - copy/rename the following config files
     * /config/autoload/development.local.php.dist >>> development.local.php
     * /config/autoload/doctrine.local.php.dist >>> doctrine.local.php
     * /config/autoload/local.php.dist >>> local.php
     * /config/development.config.php.dist >>> development.config.php
+* Step 5 (optional) - Use docker-compose to clean up the example application `docker-compose down`
 
 ## Usage
 
