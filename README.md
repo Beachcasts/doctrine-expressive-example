@@ -40,7 +40,7 @@ At this point the REST API should work. (The following REST endpoints return a l
 * http://localhost:8080/banks
 * http://localhost:8080/branches
 
-Each of these can be called as an HTTP GET, or an HTTP POST with Json fields payload. (See example body content in docblocks of Create and Update Handlers.)
+Each of these can be called as an HTTP GET, or an HTTP POST with Json fields payload. (See example body content in docblocks of Create and Update Handlers. Sample Json data for requests can be found in [/data](/data).)
 
 In addition to these endpoints the hypermedia in each response provides information to additional endpoints.
 
