@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Branches\Handler;
 
+use Doctrine\ORM\ORMException;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Doctrine\ORM\EntityManager;
 use Branches\Entity\Branch;
@@ -45,6 +46,7 @@ class BranchesCreateHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Exception
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
@@ -68,7 +70,7 @@ class BranchesCreateHandler implements RequestHandlerInterface
 
             $this->entityManager->persist($this->entity);
             $this->entityManager->flush();
-        } catch(\Exception $e) {
+        } catch(ORMException $e) {
             $result['_error']['error'] = 'not_created';
             $result['_error']['error_description'] = $e->getMessage();
 

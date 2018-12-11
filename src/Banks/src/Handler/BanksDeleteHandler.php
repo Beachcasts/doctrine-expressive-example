@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Banks\Handler;
 
+use Doctrine\ORM\ORMException;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -47,7 +48,7 @@ class BanksDeleteHandler implements RequestHandlerInterface
         $result = [];
         $record = $this->entityRepository->find($request->getAttribute('id'));
 
-        if ($record === null) {
+        if (empty($record)) {
             $result['_error']['error'] = 'not_found';
             $result['_error']['error_description'] = 'Record not found.';
 
@@ -57,7 +58,7 @@ class BanksDeleteHandler implements RequestHandlerInterface
         try {
             $this->entityManager->remove($record);
             $this->entityManager->flush();
-        } catch(\Exception $e) {
+        } catch(ORMException $e) {
             $result['_error']['error'] = 'not_removed';
             $result['_error']['error_description'] = $e->getMessage();
 

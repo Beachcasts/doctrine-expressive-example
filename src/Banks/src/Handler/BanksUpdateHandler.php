@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Banks\Handler;
 
+use Doctrine\ORM\ORMException;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -49,6 +50,7 @@ class BanksUpdateHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Exception
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
@@ -64,7 +66,7 @@ class BanksUpdateHandler implements RequestHandlerInterface
 
         $this->entity = $this->entityRepository->find($request->getAttribute('id'));
 
-        if ($this->entity === null) {
+        if (empty($this->entity)) {
             $result['_error']['error'] = 'not_found';
             $result['_error']['error_description'] = 'Record not found.';
 
@@ -77,7 +79,7 @@ class BanksUpdateHandler implements RequestHandlerInterface
 
             $this->entityManager->merge($this->entity);
             $this->entityManager->flush();
-        } catch(\Exception $e) {
+        } catch(ORMException $e) {
             $result['_error']['error'] = 'not_updated';
             $result['_error']['error_description'] = $e->getMessage();
 

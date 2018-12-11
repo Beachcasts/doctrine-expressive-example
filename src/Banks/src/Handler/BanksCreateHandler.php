@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Banks\Handler;
 
+use Doctrine\ORM\ORMException;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Doctrine\ORM\EntityManager;
 use Banks\Entity\Bank;
@@ -44,6 +45,7 @@ class BanksCreateHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Exception
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
@@ -57,17 +59,24 @@ class BanksCreateHandler implements RequestHandlerInterface
             return new JsonResponse($result, 400);
         }
 
-        try {
-            // Need to get the Parent Bank this Bank will be associated with
-            $bank = $this->entityManager->find(Bank::class, $requestBody['parent_id']);
+        // Need to get the Parent Bank this Bank will be associated with
+        $bank = $this->entityManager->find(Bank::class, $requestBody['parent_id']);
 
+        if (empty($bank)) {
+            $result['_error']['error'] = 'bank_missing';
+            $result['_error']['error_description'] = 'Bank specified in request does not exist.';
+
+            return new JsonResponse($result, 400);
+        }
+
+        try {
             $this->entity->setParent($bank);
             $this->entity->setBank($requestBody);
             $this->entity->setCreated(new \DateTime("now"));
 
             $this->entityManager->persist($this->entity);
             $this->entityManager->flush();
-        } catch(\Exception $e) {
+        } catch(ORMException $e) {
             $result['_error']['error'] = 'not_created';
             $result['_error']['error_description'] = $e->getMessage();
 

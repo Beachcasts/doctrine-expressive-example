@@ -42,7 +42,7 @@ class BanksViewHandler implements RequestHandlerInterface
         $result = [];
         $return = $this->entityRepository->find($request->getAttribute('id'));
 
-        if ($return === null) {
+        if (empty($return)) {
             $result['_error']['error'] = 'not_found';
             $result['_error']['error_description'] = 'Record not found.';
 
