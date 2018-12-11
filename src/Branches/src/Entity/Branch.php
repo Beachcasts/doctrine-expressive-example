@@ -35,32 +35,32 @@ class Branch
     protected $bank_id;
 
     /**
-     * @ORM\Column(type="string", nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     protected $name;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     protected $address1;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     protected $address2;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     protected $city;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=false)
      */
     protected $zone_id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", length=15, nullable=false)
      */
     protected $zip;
 
@@ -70,7 +70,7 @@ class Branch
     protected $email;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=false)
      */
     protected $phone;
 
@@ -85,7 +85,7 @@ class Branch
     protected $created;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=false)
      */
     protected $modified;
 
@@ -123,16 +123,19 @@ class Branch
      */
     public function setBranch(array $requestBody): void
     {
+        // required data fields
         $this->setBankId($requestBody['bank_id']);
         $this->setName($requestBody['name']);
+        $this->setEmail($requestBody['email']);
         $this->setAddress1($requestBody['address1']);
-        $this->setAddress2($requestBody['address2']);
         $this->setCity($requestBody['city']);
         $this->setZoneId($requestBody['zone_id']);
         $this->setZip($requestBody['zip']);
-        $this->setEmail($requestBody['email']);
         $this->setPhone($requestBody['phone']);
         $this->setModified(new \DateTime("now"));
+
+        // optional data fields
+        $this->setAddress2($requestBody['address2'] ?? null);
 
         if (!isset($requestBody['is_active']))
         {
@@ -213,7 +216,7 @@ class Branch
     /**
      * @return string
      */
-    public function getAddress1(): ?string
+    public function getAddress1(): string
     {
         return $this->address1;
     }
@@ -221,7 +224,7 @@ class Branch
     /**
      * @param string $address1
      */
-    public function setAddress1(?string $address1): void
+    public function setAddress1(string $address1): void
     {
         $this->address1 = $address1;
     }
@@ -245,7 +248,7 @@ class Branch
     /**
      * @return string
      */
-    public function getCity(): ?string
+    public function getCity(): string
     {
         return $this->city;
     }
@@ -253,7 +256,7 @@ class Branch
     /**
      * @param string $city
      */
-    public function setCity(?string $city): void
+    public function setCity(string $city): void
     {
         $this->city = $city;
     }
@@ -261,7 +264,7 @@ class Branch
     /**
      * @return int
      */
-    public function getZoneId(): ?int
+    public function getZoneId(): int
     {
         return $this->zone_id;
     }
@@ -269,7 +272,7 @@ class Branch
     /**
      * @param int $zone_id
      */
-    public function setZoneId(?int $zone_id): void
+    public function setZoneId(int $zone_id): void
     {
         $this->zone_id = $zone_id;
     }
@@ -277,7 +280,7 @@ class Branch
     /**
      * @return string
      */
-    public function getZip(): ?string
+    public function getZip(): string
     {
         return $this->zip;
     }
@@ -285,7 +288,7 @@ class Branch
     /**
      * @param string $zip
      */
-    public function setZip(?string $zip): void
+    public function setZip(string $zip): void
     {
         $this->zip = $zip;
     }
@@ -309,7 +312,7 @@ class Branch
     /**
      * @return string
      */
-    public function getPhone(): ?string
+    public function getPhone(): string
     {
         return $this->phone;
     }
@@ -317,7 +320,7 @@ class Branch
     /**
      * @param string $phone
      */
-    public function setPhone(?string $phone): void
+    public function setPhone(string $phone): void
     {
         $this->phone = $phone;
     }

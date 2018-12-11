@@ -54,17 +54,17 @@ class Bank
     protected $name;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=false)
      */
     protected $phone;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=false)
      */
     protected $fax;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=false)
      */
     protected $address1;
 
@@ -74,17 +74,17 @@ class Bank
     protected $address2;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=false)
      */
     protected $city;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=false)
      */
     protected $zone_id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=false)
      */
     protected $zip;
 
@@ -174,19 +174,22 @@ class Bank
      */
     public function setBank(array $requestBody): void
     {
+        // required data fields
         $this->setParentId($requestBody['parent_id']);
         $this->setName($requestBody['name']);
-        $this->setPhone($requestBody['phone']);
-        $this->setFax($requestBody['fax']);
         $this->setAddress1($requestBody['address1']);
-        $this->setAddress2($requestBody['address2']);
         $this->setCity($requestBody['city']);
         $this->setZoneId($requestBody['zone_id']);
         $this->setZip($requestBody['zip']);
+        $this->setPhone($requestBody['phone']);
+        $this->setFax($requestBody['fax']);
         $this->setProduct1Price($requestBody['product_1_price']);
         $this->setProduct2Price($requestBody['product_2_price']);
         $this->setAllowEmailAttachment($requestBody['allow_email_attachment']);
         $this->setModified(new \DateTime("now"));
+        
+        // optional data fields
+        $this->setAddress2($requestBody['address2'] ?? null);
 
         if (!isset($requestBody['is_active']))
         {
@@ -305,7 +308,7 @@ class Bank
     /**
      * @return string
      */
-    public function getPhone(): ?string
+    public function getPhone(): string
     {
         return $this->phone;
     }
@@ -313,7 +316,7 @@ class Bank
     /**
      * @param string $phone
      */
-    public function setPhone(?string $phone): void
+    public function setPhone(string $phone): void
     {
         $this->phone = $phone;
     }
@@ -321,7 +324,7 @@ class Bank
     /**
      * @return string
      */
-    public function getFax(): ?string
+    public function getFax(): string
     {
         return $this->fax;
     }
@@ -329,7 +332,7 @@ class Bank
     /**
      * @param string $fax
      */
-    public function setFax(?string $fax): void
+    public function setFax(string $fax): void
     {
         $this->fax = $fax;
     }
@@ -337,7 +340,7 @@ class Bank
     /**
      * @return string
      */
-    public function getAddress1(): ?string
+    public function getAddress1(): string
     {
         return $this->address1;
     }
@@ -345,7 +348,7 @@ class Bank
     /**
      * @param string $address1
      */
-    public function setAddress1(?string $address1): void
+    public function setAddress1(string $address1): void
     {
         $this->address1 = $address1;
     }
@@ -369,7 +372,7 @@ class Bank
     /**
      * @return string
      */
-    public function getCity(): ?string
+    public function getCity(): string
     {
         return $this->city;
     }
@@ -377,7 +380,7 @@ class Bank
     /**
      * @param string $city
      */
-    public function setCity(?string $city): void
+    public function setCity(string $city): void
     {
         $this->city = $city;
     }
@@ -385,7 +388,7 @@ class Bank
     /**
      * @return int
      */
-    public function getZoneId(): ?int
+    public function getZoneId(): int
     {
         return $this->zone_id;
     }
@@ -393,7 +396,7 @@ class Bank
     /**
      * @param int $zone_id
      */
-    public function setZoneId(?int $zone_id): void
+    public function setZoneId(int $zone_id): void
     {
         $this->zone_id = $zone_id;
     }
@@ -401,7 +404,7 @@ class Bank
     /**
      * @return string
      */
-    public function getZip(): ?string
+    public function getZip(): string
     {
         return $this->zip;
     }
@@ -409,7 +412,7 @@ class Bank
     /**
      * @param string $zip
      */
-    public function setZip(?string $zip): void
+    public function setZip(string $zip): void
     {
         $this->zip = $zip;
     }
