@@ -76,7 +76,7 @@ class BranchesReadHandler implements RequestHandlerInterface
             $records[$key]['_links']['delete'] = $this->urlHelper->generate('/branches/'.$value['id']);
         }
 
-        $result['Result']['Branches'] = $records;
+        $result['Result']['_embedded']['Branches'] = $records;
 
         return new JsonResponse($result);
     }

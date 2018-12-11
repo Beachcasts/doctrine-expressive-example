@@ -48,8 +48,8 @@ class BranchesDeleteHandler implements RequestHandlerInterface
         $record = $this->entityRepository->find($request->getAttribute('id'));
 
         if ($record === null) {
-            $result['error'] = 'not_found';
-            $result['error_description'] = 'Record not found.';
+            $result['_error']['error'] = 'not_found';
+            $result['_error']['error_description'] = 'Record not found.';
 
             return new JsonResponse($result, 404);
         }
@@ -58,8 +58,8 @@ class BranchesDeleteHandler implements RequestHandlerInterface
             $this->entityManager->remove($record);
             $this->entityManager->flush();
         } catch(\Exception $e) {
-            $result['error'] = 'not_removed';
-            $result['error_description'] = $e->getMessage();
+            $result['_error']['error'] = 'not_removed';
+            $result['_error']['error_description'] = $e->getMessage();
 
             return new JsonResponse($result, 400);
         }
@@ -69,7 +69,7 @@ class BranchesDeleteHandler implements RequestHandlerInterface
         $result['Result']['_links']['create'] = $this->urlHelper->generate('/branches/');
         $result['Result']['_links']['read'] = $this->urlHelper->generate('/branches/');
 
-        $result['Result']['Branches'] = ['deleted_id' => $request->getAttribute('id')];
+        $result['Result']['_embedded']['Branch'] = ['deleted_id' => $request->getAttribute('id')];
 
         return new JsonResponse($result);
     }

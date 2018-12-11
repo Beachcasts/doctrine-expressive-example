@@ -52,8 +52,8 @@ class BranchesCreateHandler implements RequestHandlerInterface
         $requestBody = $request->getParsedBody()['Request']['Branches'];
 
         if (empty($requestBody)) {
-            $result['error'] = 'missing_request';
-            $result['error_description'] = 'No request body sent.';
+            $result['_error']['error'] = 'missing_request';
+            $result['_error']['error_description'] = 'No request body sent.';
 
             return new JsonResponse($result, 400);
         }
@@ -69,8 +69,8 @@ class BranchesCreateHandler implements RequestHandlerInterface
             $this->entityManager->persist($this->entity);
             $this->entityManager->flush();
         } catch(\Exception $e) {
-            $result['error'] = 'not_created';
-            $result['error_description'] = $e->getMessage();
+            $result['_error']['error'] = 'not_created';
+            $result['_error']['error_description'] = $e->getMessage();
 
             return new JsonResponse($result, 400);
         }
@@ -81,11 +81,11 @@ class BranchesCreateHandler implements RequestHandlerInterface
         $result['Result']['_links']['update'] = $this->urlHelper->generate('/branches/'.$this->entity->getId());
         $result['Result']['_links']['delete'] = $this->urlHelper->generate('/branches/'.$this->entity->getId());
 
-        $result['Result']['Branches'] = $this->entity->getBranch();
+        $result['Result']['_embedded']['Branch'] = $this->entity->getBranch();
 
-        if (empty($result['Result']['Branches'])) {
-            $result['error'] = 'not_created';
-            $result['error_description'] = 'Not Created.';
+        if (empty($result['Result']['_embedded']['Branch'])) {
+            $result['_error']['error'] = 'not_created';
+            $result['_error']['error_description'] = 'Not Created.';
 
             return new JsonResponse($result, 400);
         }

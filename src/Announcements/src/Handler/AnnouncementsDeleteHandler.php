@@ -44,8 +44,8 @@ class AnnouncementsDeleteHandler implements RequestHandlerInterface
         $record = $this->entityRepository->find($request->getAttribute('id'));
 
         if ($record === null) {
-            $result['error'] = 'not_found';
-            $result['error_description'] = 'Record not found.';
+            $result['_error']['error'] = 'not_found';
+            $result['_error']['error_description'] = 'Record not found.';
 
             return new JsonResponse($result, 404);
         }
@@ -54,8 +54,8 @@ class AnnouncementsDeleteHandler implements RequestHandlerInterface
             $this->entityManager->remove($record);
             $this->entityManager->flush();
         } catch(\Exception $e) {
-            $result['error'] = 'not_removed';
-            $result['error_description'] = $e->getMessage();
+            $result['_error']['error'] = 'not_removed';
+            $result['_error']['error_description'] = $e->getMessage();
 
             return new JsonResponse($result, 400);
         }
@@ -65,7 +65,7 @@ class AnnouncementsDeleteHandler implements RequestHandlerInterface
         $result['Result']['_links']['create'] = $this->urlHelper->generate('/announcements/');
         $result['Result']['_links']['read'] = $this->urlHelper->generate('/announcements/');
 
-        $result['Result']['Announcements'] = ['deleted_id' => $request->getAttribute('id')];
+        $result['Result']['_embedded']['Announcement'] = ['deleted_id' => $request->getAttribute('id')];
 
         return new JsonResponse($result);
     }

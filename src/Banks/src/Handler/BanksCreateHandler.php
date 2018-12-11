@@ -51,8 +51,8 @@ class BanksCreateHandler implements RequestHandlerInterface
         $requestBody = $request->getParsedBody()['Request']['Banks'];
 
         if (empty($requestBody)) {
-            $result['error'] = 'missing_request';
-            $result['error_description'] = 'No request body sent.';
+            $result['_error']['error'] = 'missing_request';
+            $result['_error']['error_description'] = 'No request body sent.';
 
             return new JsonResponse($result, 400);
         }
@@ -68,8 +68,8 @@ class BanksCreateHandler implements RequestHandlerInterface
             $this->entityManager->persist($this->entity);
             $this->entityManager->flush();
         } catch(\Exception $e) {
-            $result['error'] = 'not_created';
-            $result['error_description'] = $e->getMessage();
+            $result['_error']['error'] = 'not_created';
+            $result['_error']['error_description'] = $e->getMessage();
 
             return new JsonResponse($result, 400);
         }
@@ -80,11 +80,11 @@ class BanksCreateHandler implements RequestHandlerInterface
         $result['Result']['_links']['update'] = $this->urlHelper->generate('/banks/'.$this->entity->getId());
         $result['Result']['_links']['delete'] = $this->urlHelper->generate('/banks/'.$this->entity->getId());
 
-        $result['Result']['Banks'] = $this->entity->getBank();
+        $result['Result']['_embedded']['Bank'] = $this->entity->getBank();
 
-        if (empty($result['Result']['Banks'])) {
-            $result['error'] = 'not_created';
-            $result['error_description'] = 'Not Created.';
+        if (empty($result['Result']['_embedded']['Bank'])) {
+            $result['_error']['error'] = 'not_created';
+            $result['_error']['error_description'] = 'Not Created.';
 
             return new JsonResponse($result, 400);
         }

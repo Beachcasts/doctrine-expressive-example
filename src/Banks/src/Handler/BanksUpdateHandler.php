@@ -56,8 +56,8 @@ class BanksUpdateHandler implements RequestHandlerInterface
         $requestBody = $request->getParsedBody()['Request']['Banks'];
 
         if (empty($requestBody)) {
-            $result['error'] = 'missing_request';
-            $result['error_description'] = 'No request body sent.';
+            $result['_error']['error'] = 'missing_request';
+            $result['_error']['error_description'] = 'No request body sent.';
 
             return new JsonResponse($result, 400);
         }
@@ -65,8 +65,8 @@ class BanksUpdateHandler implements RequestHandlerInterface
         $this->entity = $this->entityRepository->find($request->getAttribute('id'));
 
         if ($this->entity === null) {
-            $result['error'] = 'not_found';
-            $result['error_description'] = 'Record not found.';
+            $result['_error']['error'] = 'not_found';
+            $result['_error']['error_description'] = 'Record not found.';
 
             return new JsonResponse($result, 404);
         }
@@ -78,8 +78,8 @@ class BanksUpdateHandler implements RequestHandlerInterface
             $this->entityManager->merge($this->entity);
             $this->entityManager->flush();
         } catch(\Exception $e) {
-            $result['error'] = 'not_updated';
-            $result['error_description'] = $e->getMessage();
+            $result['_error']['error'] = 'not_updated';
+            $result['_error']['error_description'] = $e->getMessage();
 
             return new JsonResponse($result, 400);
         }
@@ -90,11 +90,11 @@ class BanksUpdateHandler implements RequestHandlerInterface
         $result['Result']['_links']['delete'] = $this->urlHelper->generate('/banks/'.$this->entity->getId());
         $result['Result']['_links']['view'] = $this->urlHelper->generate('/banks/'.$this->entity->getId());
 
-        $result['Result']['Banks'] = $this->entity->getBank();
+        $result['Result']['_embedded']['Bank'] = $this->entity->getBank();
 
-        if (empty($result['Result']['Banks'])) {
-            $result['error'] = 'not_found';
-            $result['error_description'] = 'Not Found.';
+        if (empty($result['Result']['_embedded']['Bank'])) {
+            $result['_error']['error'] = 'not_found';
+            $result['_error']['error_description'] = 'Not Found.';
 
             return new JsonResponse($result, 404);
         }

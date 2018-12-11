@@ -43,8 +43,8 @@ class BranchesViewHandler implements RequestHandlerInterface
         $return = $this->entityRepository->find($request->getAttribute('id'));
 
         if ($return === null) {
-            $result['error'] = 'not_found';
-            $result['error_description'] = 'Record not found.';
+            $result['_error']['error'] = 'not_found';
+            $result['_error']['error_description'] = 'Record not found.';
 
             return new JsonResponse($result, 404);
         }
@@ -56,7 +56,7 @@ class BranchesViewHandler implements RequestHandlerInterface
         $result['Result']['_links']['update'] = $this->urlHelper->generate('/branches/'.$return->getId());
         $result['Result']['_links']['delete'] = $this->urlHelper->generate('/branches/'.$return->getId());
 
-        $result['Result']['Branches'] = $return->getBranch(true);
+        $result['Result']['_embedded']['Branch'] = $return->getBranch(true);
 
         return new JsonResponse($result);
     }

@@ -76,7 +76,7 @@ class BanksReadHandler implements RequestHandlerInterface
             $records[$key]['_links']['delete'] = $this->urlHelper->generate('/banks/'.$value['id']);
         }
 
-        $result['Result']['Banks'] = $records;
+        $result['Result']['_embedded']['Banks'] = $records;
 
         return new JsonResponse($result);
     }

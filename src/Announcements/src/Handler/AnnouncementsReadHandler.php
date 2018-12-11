@@ -64,10 +64,10 @@ class AnnouncementsReadHandler implements RequestHandlerInterface
         $result['Result']['_links']['last'] = $this->urlHelper->generate('/announcements/page/'.$totalPagesCount);
         $result['Result']['_links']['create'] = $this->urlHelper->generate('/announcements/');
         $result['Result']['_links']['read'] = $this->urlHelper->generate('/announcements/');
-        $result['Result']['total'] = $totalItems;
-        $result['Result']['per_page'] = $this->pageCount;
-        $result['Result']['page'] = $currentPage;
-        $result['Result']['total_pages'] = $totalPagesCount;
+        $result['Result']['_per_page'] = $this->pageCount;
+        $result['Result']['_page'] = $currentPage;
+        $result['Result']['_total'] = $totalItems;
+        $result['Result']['_total_pages'] = $totalPagesCount;
 
         // add record specific hypermedia links
         foreach ($records as $key => $value) {
@@ -76,7 +76,7 @@ class AnnouncementsReadHandler implements RequestHandlerInterface
             $records[$key]['_links']['delete'] = $this->urlHelper->generate('/announcements/'.$value['id']);
         }
 
-        $result['Result']['Announcements'] = $records;
+        $result['Result']['_embedded']['Announcements'] = $records;
 
         return new JsonResponse($result);
     }

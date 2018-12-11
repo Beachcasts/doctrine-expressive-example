@@ -43,8 +43,8 @@ class AnnouncementsViewHandler implements RequestHandlerInterface
         $return = $this->entityRepository->find($request->getAttribute('id'));
 
         if ($return === null) {
-            $result['error'] = 'not_found';
-            $result['error_description'] = 'Record not found.';
+            $result['_error']['error'] = 'not_found';
+            $result['_error']['error_description'] = 'Record not found.';
 
             return new JsonResponse($result, 404);
         }
@@ -56,7 +56,7 @@ class AnnouncementsViewHandler implements RequestHandlerInterface
         $result['Result']['_links']['update'] = $this->urlHelper->generate('/announcements/'.$return->getId());
         $result['Result']['_links']['delete'] = $this->urlHelper->generate('/announcements/'.$return->getId());
 
-        $result['Result']['Announcements'] = $return->getAnnouncement();
+        $result['Result']['_embedded']['Announcement'] = $return->getAnnouncement();
 
         return new JsonResponse($result);
     }
