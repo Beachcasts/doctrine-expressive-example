@@ -19,7 +19,7 @@
         }
     },
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
         "dasprid/container-interop-doctrine": "1.1.0",
         "doctrine/dbal": "^2.8",
         "doctrine/orm": "^2.6",
