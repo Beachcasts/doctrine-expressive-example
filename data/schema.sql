@@ -6,7 +6,7 @@
 DROP TABLE IF EXISTS `announcements`;
 
 CREATE TABLE `announcements` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` char(36) NOT NULL,
   `sort` int(11) NOT NULL,
   `content` text NOT NULL,
   `is_admin` tinyint(1) NOT NULL,
@@ -60,7 +60,7 @@ DROP TABLE IF EXISTS `banks`;
 
 CREATE TABLE `banks` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) unsigned NOT NULL,
+  `parent_id` int(11) unsigned NOT NULL DEFAULT 0,
   `name` varchar(50) NOT NULL,
   `phone` varchar(20) NOT NULL,
   `fax` varchar(20) NOT NULL,
