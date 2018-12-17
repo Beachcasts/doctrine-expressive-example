@@ -34,7 +34,9 @@ RUN apt-get update \
 
 && echo 'zend_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so"' >> /usr/local/etc/php/conf.d/xdebug.ini \
 && echo 'xdebug.remote_enable=on' >> /usr/local/etc/php/conf.d/xdebug.ini \
-&& echo 'xdebug.remote_autostart=off' >> /usr/local/etc/php/conf.d/xdebug.ini \
+&& echo 'xdebug.remote_host=172.17.0.1' \
+# set autostart to on, so API calls auto trigger debugger
+&& echo 'xdebug.remote_autostart=0' >> /usr/local/etc/php/conf.d/xdebug.ini \
 && echo 'xdebug.remote_connect_back=1' >> /usr/local/etc/php/conf.d/xdebug.ini \
 
  && a2enmod rewrite \
