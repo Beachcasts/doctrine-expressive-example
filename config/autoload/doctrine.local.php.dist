@@ -19,6 +19,7 @@ declare(strict_types=1);
 
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
+use Ramsey\Uuid\Doctrine\UuidType;
 
 return [
     'doctrine' => [
@@ -33,6 +34,9 @@ return [
                     'password' => '654321',
                 ],
             ],
+        ],
+        'types' => [
+                    UuidType::NAME => UuidType::class,
         ],
         'driver' => [
             'orm_default' => [
