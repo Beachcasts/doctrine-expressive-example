@@ -11,6 +11,7 @@ The Doctrine Entities also include example usage of [Associations](https://www.d
     * [FastRoute](https://github.com/nikic/FastRoute) usage
     * UrlHelper usage for hypermedia link creation
 * [container-interop-doctrine](https://github.com/DASPRiD/container-interop-doctrine) usage
+* [ramsey/uuid](https://github.com/ramsey/uuid) and [ramsey/uuid-doctrine](https://github.com/ramsey/uuid-doctrine) usages for primary keys in Announcements module, where routes also had to accommodate the UUID pattern of URLs - see the [RoutesDelegator.php](/src/Announcements/src/RoutesDelegator.php).
 * Doctrine ORM usage
     * OneToMany [Bidirectional](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/association-mapping.html#one-to-many-bidirectional) and [self-referencing](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/association-mapping.html#one-to-many-self-referencing) association example (See Bank and Branch Entities)
     * ManyToOne [unidirectional](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/association-mapping.html#many-to-one-unidirectional) association example (See Bank and Branch Entities)
