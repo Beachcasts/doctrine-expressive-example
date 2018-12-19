@@ -175,7 +175,6 @@ class Bank
     public function setBank(array $requestBody): void
     {
         // required data fields
-        $this->setParentId($requestBody['parent_id']);
         $this->setName($requestBody['name']);
         $this->setAddress1($requestBody['address1']);
         $this->setCity($requestBody['city']);
@@ -189,6 +188,7 @@ class Bank
         $this->setModified(new \DateTime("now"));
         
         // optional data fields
+        $this->setParentId($requestBody['parent_id'] ?? 1);
         $this->setAddress2($requestBody['address2'] ?? null);
 
         if (!isset($requestBody['is_active']))
@@ -276,7 +276,7 @@ class Bank
     /**
      * @return int
      */
-    public function getParentId(): int
+    public function getParentId(): ?int
     {
         return $this->parent_id;
     }
@@ -284,7 +284,7 @@ class Bank
     /**
      * @param integer $parent_id
      */
-    public function setParentId(int $parent_id = 0): void
+    public function setParentId(?int $parent_id = 0): void
     {
         $this->parent_id = $parent_id;
     }

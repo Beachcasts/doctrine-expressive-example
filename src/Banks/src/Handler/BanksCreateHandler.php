@@ -59,17 +59,12 @@ class BanksCreateHandler implements RequestHandlerInterface
             return new JsonResponse($result, 400);
         }
 
-        // Need to get the Parent Bank this Bank will be associated with
-        $bank = $this->entityManager->find(Bank::class, $requestBody['parent_id']);
-
-        if (empty($bank)) {
-            $result['_error']['error'] = 'bank_missing';
-            $result['_error']['error_description'] = 'Bank specified in request does not exist.';
-
-            return new JsonResponse($result, 400);
-        }
-
         try {
+            // if no parent selected, use Bank #1 from DB
+            $parentId = ($requestBody['parent_id'] ?? 1);
+            // Need to get the Parent Bank this Bank will be associated with
+            $bank = $this->entityManager->find(Bank::class, $parentId);
+            
             $this->entity->setParent($bank);
             $this->entity->setBank($requestBody);
             $this->entity->setCreated(new \DateTime("now"));
