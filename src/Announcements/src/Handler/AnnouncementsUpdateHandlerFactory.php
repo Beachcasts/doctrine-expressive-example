@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Announcements\Handler;
 
 use Doctrine\ORM\EntityManager;
-use Announcements\Entity\Announcement;
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Helper\ServerUrlHelper;
 
@@ -23,12 +22,8 @@ class AnnouncementsUpdateHandlerFactory
     {
         $entityManager = $container->get(EntityManager::class);
 
-        $entityRepository = $entityManager->getRepository('Announcements\Entity\Announcement');
-
-        $entity = new Announcement();
-
         $urlHelper = $container->get(ServerUrlHelper::class);
 
-        return new AnnouncementsUpdateHandler($entityManager, $entityRepository, $entity, $urlHelper);
+        return new AnnouncementsUpdateHandler($entityManager, $urlHelper);
     }
 }

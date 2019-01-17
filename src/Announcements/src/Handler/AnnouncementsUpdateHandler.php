@@ -7,7 +7,6 @@ namespace Announcements\Handler;
 use Doctrine\ORM\ORMException;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Announcements\Entity\Announcement;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -24,26 +23,19 @@ use Zend\Diactoros\Response\JsonResponse;
 class AnnouncementsUpdateHandler implements RequestHandlerInterface
 {
     protected $entityManager;
-    protected $entityRepository;
-    protected $entity;
     protected $urlHelper;
 
     /**
      * AnnouncementsUpdateHandler constructor.
      * @param EntityManager $entityManager
-     * @param EntityRepository $entityRepository
      * @param Announcement $entity
      * @param ServerUrlHelper $urlHelper
      */
     public function __construct(
         EntityManager $entityManager,
-        EntityRepository $entityRepository,
-        Announcement $entity,
         ServerUrlHelper $urlHelper
     ) {
         $this->entityManager = $entityManager;
-        $this->entityRepository = $entityRepository;
-        $this->entity = $entity;
         $this->urlHelper = $urlHelper;
     }
 
@@ -64,9 +56,11 @@ class AnnouncementsUpdateHandler implements RequestHandlerInterface
             return new JsonResponse($result, 400);
         }
 
-        $this->entity = $this->entityRepository->find($request->getAttribute('id'));
+        $entityRepository = $this->entityManager->getRepository('Announcements\Entity\Announcement');
 
-        if (empty($this->entity)) {
+        $entity = $entityRepository->find($request->getAttribute('id'));
+
+        if (empty($entity)) {
             $result['_error']['error'] = 'not_found';
             $result['_error']['error_description'] = 'Record not found.';
 
@@ -74,9 +68,9 @@ class AnnouncementsUpdateHandler implements RequestHandlerInterface
         }
 
         try {
-            $this->entity->setAnnouncement($requestBody);
+            $entity->setAnnouncement($requestBody);
             
-            $this->entityManager->merge($this->entity);
+            $this->entityManager->merge($entity);
             $this->entityManager->flush();
         } catch(ORMException $e) {
             $result['_error']['error'] = 'not_updated';
@@ -86,12 +80,12 @@ class AnnouncementsUpdateHandler implements RequestHandlerInterface
         }
 
         // add hypermedia links
-        $result['Result']['_links']['self'] = $this->urlHelper->generate('/announcements/'.$this->entity->getId());
+        $result['Result']['_links']['self'] = $this->urlHelper->generate('/announcements/'.$entity->getId());
         $result['Result']['_links']['read'] = $this->urlHelper->generate('/announcements/');
-        $result['Result']['_links']['delete'] = $this->urlHelper->generate('/announcements/'.$this->entity->getId());
-        $result['Result']['_links']['view'] = $this->urlHelper->generate('/announcements/'.$this->entity->getId());
+        $result['Result']['_links']['delete'] = $this->urlHelper->generate('/announcements/'.$entity->getId());
+        $result['Result']['_links']['view'] = $this->urlHelper->generate('/announcements/'.$entity->getId());
 
-        $result['Result']['_embedded']['Announcement'] = $this->entity->getAnnouncement();
+        $result['Result']['_embedded']['Announcement'] = $entity->getAnnouncement();
 
         if (empty($result['Result']['_embedded']['Announcement'])) {
             $result['_error']['error'] = 'not_found';

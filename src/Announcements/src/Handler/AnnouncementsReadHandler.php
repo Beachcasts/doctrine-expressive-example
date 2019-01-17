@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Announcements\Handler;
 
+use Doctrine\ORM\EntityManager;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -18,22 +19,22 @@ use Zend\Diactoros\Response\JsonResponse;
  */
 class AnnouncementsReadHandler implements RequestHandlerInterface
 {
-    protected $paginator;
+    protected $entityManager;
     protected $pageCount;
     protected $urlHelper;
 
     /**
      * AnnouncementsReadHandler constructor.
-     * @param Paginator $paginator
+     * @param EntityManager $entityManager
      * @param $pageCount
      * @param ServerUrlHelper $urlHelper
      */
     public function __construct(
-        Paginator $paginator,
+        EntityManager $entityManager,
         $pageCount,
         ServerUrlHelper $urlHelper
     ) {
-        $this->paginator = $paginator;
+        $this->entityManager = $entityManager;
         $this->pageCount = $pageCount;
         $this->urlHelper = $urlHelper;
     }
@@ -44,14 +45,20 @@ class AnnouncementsReadHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
+        $query = $this->entityManager->getRepository('Announcements\Entity\Announcement')
+            ->createQueryBuilder('c')
+            ->getQuery();
+
+        $paginator  = new Paginator($query);
+
         $result = [];
-        $totalItems = count($this->paginator);
+        $totalItems = count($paginator);
         $currentPage = ($request->getAttribute('page')) ?: 1;
         $totalPagesCount = ceil($totalItems / $this->pageCount);
         $nextPage = (($currentPage < $totalPagesCount) ? $currentPage + 1 : $totalPagesCount);
         $previousPage = (($currentPage > 1) ? $currentPage - 1 : 1);
 
-        $records = $this->paginator
+        $records = $paginator
             ->getQuery()
             ->setFirstResult($this->pageCount * ($currentPage-1)) // set the offset
             ->setMaxResults($this->pageCount) // set the limit

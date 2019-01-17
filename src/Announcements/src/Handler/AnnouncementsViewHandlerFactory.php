@@ -22,10 +22,8 @@ class AnnouncementsViewHandlerFactory
     {
         $entityManager = $container->get(EntityManager::class);
 
-        $entityRepository = $entityManager->getRepository('Announcements\Entity\Announcement');
-
         $urlHelper = $container->get(ServerUrlHelper::class);
 
-        return new AnnouncementsViewHandler($entityRepository, $urlHelper);
+        return new AnnouncementsViewHandler($entityManager, $urlHelper);
     }
 }

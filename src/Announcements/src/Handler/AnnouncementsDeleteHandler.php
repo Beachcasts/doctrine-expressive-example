@@ -7,7 +7,6 @@ namespace Announcements\Handler;
 use Doctrine\ORM\ORMException;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -16,22 +15,18 @@ use Zend\Diactoros\Response\JsonResponse;
 class AnnouncementsDeleteHandler implements RequestHandlerInterface
 {
     protected $entityManager;
-    protected $entityRepository;
     protected $urlHelper;
 
     /**
      * AnnouncementsDeleteHandler constructor.
      * @param EntityManager $entityManager
-     * @param EntityRepository $entityRepository
      * @param ServerUrlHelper $urlHelper
      */
     public function __construct(
         EntityManager $entityManager,
-        EntityRepository $entityRepository,
         ServerUrlHelper $urlHelper
     ) {
         $this->entityManager = $entityManager;
-        $this->entityRepository = $entityRepository;
         $this->urlHelper = $urlHelper;
     }
 
@@ -42,9 +37,12 @@ class AnnouncementsDeleteHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         $result = [];
-        $record = $this->entityRepository->find($request->getAttribute('id'));
 
-        if (empty($record)) {
+        $entityRepository = $this->entityManager->getRepository('Announcements\Entity\Announcement');
+
+        $entity = $entityRepository->find($request->getAttribute('id'));
+
+        if (empty($entity)) {
             $result['_error']['error'] = 'not_found';
             $result['_error']['error_description'] = 'Record not found.';
 
@@ -52,7 +50,7 @@ class AnnouncementsDeleteHandler implements RequestHandlerInterface
         }
 
         try {
-            $this->entityManager->remove($record);
+            $this->entityManager->remove($entity);
             $this->entityManager->flush();
         } catch(ORMException $e) {
             $result['_error']['error'] = 'not_removed';

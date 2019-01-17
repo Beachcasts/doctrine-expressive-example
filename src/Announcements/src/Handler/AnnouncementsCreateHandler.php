@@ -23,22 +23,18 @@ use Zend\Diactoros\Response\JsonResponse;
 class AnnouncementsCreateHandler implements RequestHandlerInterface
 {
     protected $entityManager;
-    protected $entity;
     protected $urlHelper;
 
     /**
      * AnnouncementsCreateHandler constructor.
      * @param EntityManager $entityManager
-     * @param Announcement $entity
      * @param ServerUrlHelper $urlHelper
      */
     public function __construct(
         EntityManager $entityManager,
-        Announcement $entity,
         ServerUrlHelper $urlHelper
     ) {
         $this->entityManager = $entityManager;
-        $this->entity = $entity;
         $this->urlHelper = $urlHelper;
     }
 
@@ -59,11 +55,13 @@ class AnnouncementsCreateHandler implements RequestHandlerInterface
             return new JsonResponse($result, 400);
         }
 
-        try {
-            $this->entity->setAnnouncement($requestBody);
-            $this->entity->setCreated(new \DateTime("now"));
+        $entity = new Announcement();
 
-            $this->entityManager->persist($this->entity);
+        try {
+            $entity->setAnnouncement($requestBody);
+            $entity->setCreated(new \DateTime("now"));
+
+            $this->entityManager->persist($entity);
             $this->entityManager->flush();
         } catch(ORMException $e) {
             $result['_error']['error'] = 'not_created';
@@ -73,12 +71,12 @@ class AnnouncementsCreateHandler implements RequestHandlerInterface
         }
 
         // add hypermedia links
-        $result['Result']['_links']['self'] = $this->urlHelper->generate('/announcements/'.$this->entity->getId());
+        $result['Result']['_links']['self'] = $this->urlHelper->generate('/announcements/'.$entity->getId());
         $result['Result']['_links']['read'] = $this->urlHelper->generate('/announcements/');
-        $result['Result']['_links']['update'] = $this->urlHelper->generate('/announcements/'.$this->entity->getId());
-        $result['Result']['_links']['delete'] = $this->urlHelper->generate('/announcements/'.$this->entity->getId());
+        $result['Result']['_links']['update'] = $this->urlHelper->generate('/announcements/'.$entity->getId());
+        $result['Result']['_links']['delete'] = $this->urlHelper->generate('/announcements/'.$entity->getId());
 
-        $result['Result']['_embedded']['Announcement'] = $this->entity->getAnnouncement();
+        $result['Result']['_embedded']['Announcement'] = $entity->getAnnouncement();
 
         if (empty($result['Result']['_embedded']['Announcement'])) {
             $result['_error']['error'] = 'not_created';
