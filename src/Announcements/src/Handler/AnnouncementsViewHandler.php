@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Announcements\Handler;
 
+use Doctrine\ORM\EntityManager;
 use Zend\Expressive\Helper\ServerUrlHelper;
-use Doctrine\ORM\EntityRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -17,19 +17,19 @@ use Zend\Diactoros\Response\JsonResponse;
  */
 class AnnouncementsViewHandler implements RequestHandlerInterface
 {
-    protected $entityRepository;
+    protected $entityManager;
     protected $urlHelper;
 
     /**
      * AnnouncementsViewHandler constructor.
-     * @param EntityRepository $entityRepository
+     * @param EntityManager $entityManager
      * @param ServerUrlHelper $urlHelper
      */
     public function __construct(
-        EntityRepository $entityRepository,
+        EntityManager $entityManager,
         ServerUrlHelper $urlHelper
     ) {
-        $this->entityRepository = $entityRepository;
+        $this->entityManager = $entityManager;
         $this->urlHelper = $urlHelper;
     }
 
@@ -40,7 +40,10 @@ class AnnouncementsViewHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         $result = [];
-        $return = $this->entityRepository->find($request->getAttribute('id'));
+
+        $entityRepository = $this->entityManager->getRepository('Announcements\Entity\Announcement');
+
+        $return = $entityRepository->find($request->getAttribute('id'));
 
         if (empty($return)) {
             $result['_error']['error'] = 'not_found';
