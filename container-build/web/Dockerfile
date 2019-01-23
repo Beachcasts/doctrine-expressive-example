@@ -30,7 +30,7 @@ RUN apt-get update \
  && docker-php-ext-enable xdebug \
 
 && echo 'xdebug.remote_enable=on' >> /usr/local/etc/php/conf.d/xdebug.ini \
-&& echo 'xdebug.remote_host=host.docker.internal' \
+&& echo 'xdebug.remote_host=host.docker.internal' >> /usr/local/etc/php/conf.d/xdebug.ini \
 # set autostart to on, so API calls auto trigger debugger
 #&& echo 'xdebug.remote_autostart=0' >> /usr/local/etc/php/conf.d/xdebug.ini \
 
