@@ -1,0 +1,28 @@
+openapi: "3.0.2"
+info:
+  title: "Beachcasts API"
+  description: ""
+  version: "0.5.0"
+  contact: 
+    name: "Adam Culp"
+    url: "https://beachcasts.com"
+    email: "adam.culp@beachcasts.com"
+  license:
+    name: "BSD 3-Clause License"
+    url: "https://github.com/Beachcasts/doctrine-expressive-example/blob/master/LICENSE"  
+servers: 
+  - url: 
+    description: "Production API Server"
+  - url: 
+    description: "Staging API Server"
+  - url: 
+    description: "Local Development Server"
+tags: 
+  - name: Annoucements
+    description: Endpoints to work with the Announcements resources
+  - name: Banks
+    description: Endpoints to work with the Banks resources
+  - name: Branches  
+    description: Endpoints to work with the Branches resources
+paths: 
+      
