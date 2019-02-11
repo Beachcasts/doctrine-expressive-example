@@ -24,20 +24,15 @@
 FROM php:7.2-apache
 
 RUN apt-get update \
- && apt-get install -y git zlib1g-dev mysql-client libzip-dev \
+ && apt-get install -y vim git zlib1g-dev mysql-client libzip-dev \
  && docker-php-ext-install zip mysqli pdo_mysql \
  && pecl install xdebug \
  && docker-php-ext-enable xdebug \
 
-# for PHP 7.3, but Xdebug is broken
-# && echo 'zend_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20180731/xdebug.so"' > /usr/local/etc/php/conf.d/xdebug.ini \
-
-&& echo 'zend_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so"' >> /usr/local/etc/php/conf.d/xdebug.ini \
 && echo 'xdebug.remote_enable=on' >> /usr/local/etc/php/conf.d/xdebug.ini \
-&& echo 'xdebug.remote_host=172.17.0.1' \
+&& echo 'xdebug.remote_host=host.docker.internal' >> /usr/local/etc/php/conf.d/xdebug.ini \
 # set autostart to on, so API calls auto trigger debugger
-&& echo 'xdebug.remote_autostart=0' >> /usr/local/etc/php/conf.d/xdebug.ini \
-&& echo 'xdebug.remote_connect_back=1' >> /usr/local/etc/php/conf.d/xdebug.ini \
+#&& echo 'xdebug.remote_autostart=0' >> /usr/local/etc/php/conf.d/xdebug.ini \
 
  && a2enmod rewrite \
  && sed -i 's!/var/www/html!/var/www/public!g' /etc/apache2/sites-available/000-default.conf \

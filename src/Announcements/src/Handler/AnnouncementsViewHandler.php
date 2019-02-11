@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Announcements\Handler;
 
+use Announcements\Entity\Announcement;
 use Doctrine\ORM\EntityManager;
-use Zend\Expressive\Helper\ServerUrlHelper;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response\JsonResponse;
+use RuntimeException;
+use Zend\Expressive\Hal\HalResponseFactory;
+use Zend\Expressive\Hal\ResourceGenerator;
+use Zend\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;
+use Zend\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 
 /**
  * Class AnnouncementsViewHandler
@@ -18,19 +22,23 @@ use Zend\Diactoros\Response\JsonResponse;
 class AnnouncementsViewHandler implements RequestHandlerInterface
 {
     protected $entityManager;
-    protected $urlHelper;
+    protected $responseFactory;
+    protected $resourceGenerator;
 
     /**
      * AnnouncementsViewHandler constructor.
      * @param EntityManager $entityManager
-     * @param ServerUrlHelper $urlHelper
+     * @param HalResponseFactory $responseFactory
+     * @param ResourceGenerator $resourceGenerator
      */
     public function __construct(
         EntityManager $entityManager,
-        ServerUrlHelper $urlHelper
+        HalResponseFactory $responseFactory,
+        ResourceGenerator $resourceGenerator
     ) {
         $this->entityManager = $entityManager;
-        $this->urlHelper = $urlHelper;
+        $this->responseFactory = $responseFactory;
+        $this->resourceGenerator = $resourceGenerator;
     }
 
     /**
@@ -39,28 +47,26 @@ class AnnouncementsViewHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $result = [];
+        $id               = $request->getAttribute('id', null);
+        $entityRepository = $this->entityManager->getRepository(Announcement::class);
+        $entity           = $entityRepository->find($id);
 
-        $entityRepository = $this->entityManager->getRepository('Announcements\Entity\Announcement');
+        if (empty($entity)) {
+            $problem = new class ($id) extends RuntimeException implements ProblemDetailsExceptionInterface {
+                use CommonProblemDetailsExceptionTrait;
 
-        $return = $entityRepository->find($request->getAttribute('id'));
-
-        if (empty($return)) {
-            $result['_error']['error'] = 'not_found';
-            $result['_error']['error_description'] = 'Record not found.';
-
-            return new JsonResponse($result, 404);
+                public function __construct(?string $id)
+                {
+                    $this->detail = sprintf('Unable to find an announcement with ID "%s"', (string) $id);
+                    $this->status = 404;
+                    $this->title  = 'Record not found.';
+                    parent::__construct($this->detail, $this->status);
+                }
+            };
+            throw $problem;
         }
 
-        // add hypermedia links
-        $result['Result']['_links']['self'] = $this->urlHelper->generate('/announcements/'.$return->getId());
-        $result['Result']['_links']['create'] = $this->urlHelper->generate('/announcements/');
-        $result['Result']['_links']['read'] = $this->urlHelper->generate('/announcements/');
-        $result['Result']['_links']['update'] = $this->urlHelper->generate('/announcements/'.$return->getId());
-        $result['Result']['_links']['delete'] = $this->urlHelper->generate('/announcements/'.$return->getId());
-
-        $result['Result']['_embedded']['Announcement'] = $return->getAnnouncement();
-
-        return new JsonResponse($result);
+        $resource = $this->resourceGenerator->fromObject($entity, $request);
+        return $this->responseFactory->createResponse($request, $resource);
     }
 }
