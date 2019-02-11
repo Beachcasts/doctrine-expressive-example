@@ -6,7 +6,8 @@ namespace Announcements\Handler;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Helper\ServerUrlHelper;
+use Zend\Expressive\Hal\HalResponseFactory;
+use Zend\Expressive\Hal\ResourceGenerator;
 
 /**
  * Class AnnouncementsReadHandlerFactory
@@ -22,8 +23,9 @@ class AnnouncementsReadHandlerFactory
     {
         $entityManager = $container->get(EntityManager::class);
 
-        $urlHelper = $container->get(ServerUrlHelper::class);
+        $resourceGenerator = $container->get(ResourceGenerator::class);
+        $responseFactory = $container->get(HalResponseFactory::class);
 
-        return new AnnouncementsReadHandler($entityManager, $container->get('config')['page_size'], $urlHelper);
+        return new AnnouncementsReadHandler($entityManager, $container->get('config')['page_size'], $responseFactory, $resourceGenerator);
     }
 }

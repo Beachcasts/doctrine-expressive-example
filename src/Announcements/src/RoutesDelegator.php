@@ -5,6 +5,7 @@ namespace Announcements;
 use Announcements\Handler;
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Application;
+use Zend\ProblemDetails\ProblemDetailsMiddleware;
 
 class RoutesDelegator
 {
@@ -22,8 +23,12 @@ class RoutesDelegator
         // Setup routes:
         $app->post('/announcements[/]', Handler\AnnouncementsCreateHandler::class, 'announcements.create');
 
-        $app->get('/announcements/{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}[/]', Handler\AnnouncementsViewHandler::class, 'announcements.view');
-        $app->get('/announcements/[page/{page:\d+}]', Handler\AnnouncementsReadHandler::class, 'announcements.read');
+        $app->get('/announcements/{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}[/]', [
+                ProblemDetailsMiddleware::class,
+                Handler\AnnouncementsViewHandler::class,
+            ], 'announcements.view');
+
+        $app->get('/announcements/[?page={page:\d+}]', Handler\AnnouncementsReadHandler::class, 'announcements.read');
 
         $app->put('/announcements/{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}[/]', Handler\AnnouncementsUpdateHandler::class, 'announcements.update');
 

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Announcements\Handler;
 
+use Announcements\Entity\Announcement;
+use Announcements\Entity\AnnouncementCollection;
 use Doctrine\ORM\EntityManager;
-use Zend\Expressive\Helper\ServerUrlHelper;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response\JsonResponse;
+use Zend\Expressive\Hal\HalResponseFactory;
+use Zend\Expressive\Hal\ResourceGenerator;
 
 /**
  * Class AnnouncementsReadHandler
@@ -21,22 +21,26 @@ class AnnouncementsReadHandler implements RequestHandlerInterface
 {
     protected $entityManager;
     protected $pageCount;
-    protected $urlHelper;
+    protected $responseFactory;
+    protected $resourceGenerator;
 
     /**
      * AnnouncementsReadHandler constructor.
      * @param EntityManager $entityManager
      * @param $pageCount
-     * @param ServerUrlHelper $urlHelper
+     * @param HalResponseFactory $responseFactory
+     * @param ResourceGenerator $resourceGenerator
      */
     public function __construct(
         EntityManager $entityManager,
         $pageCount,
-        ServerUrlHelper $urlHelper
+        HalResponseFactory $responseFactory,
+        ResourceGenerator $resourceGenerator
     ) {
         $this->entityManager = $entityManager;
         $this->pageCount = $pageCount;
-        $this->urlHelper = $urlHelper;
+        $this->responseFactory = $responseFactory;
+        $this->resourceGenerator = $resourceGenerator;
     }
 
     /**
@@ -45,46 +49,16 @@ class AnnouncementsReadHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $query = $this->entityManager->getRepository('Announcements\Entity\Announcement')
-            ->createQueryBuilder('c')
+        $repository = $this->entityManager->getRepository(Announcement::class);
+
+        $query = $repository
+            ->createQueryBuilder('a')
+            ->addOrderBy('a.sort', 'asc')
+            ->setMaxResults($this->pageCount)
             ->getQuery();
 
-        $paginator  = new Paginator($query);
-
-        $result = [];
-        $totalItems = count($paginator);
-        $currentPage = ($request->getAttribute('page')) ?: 1;
-        $totalPagesCount = ceil($totalItems / $this->pageCount);
-        $nextPage = (($currentPage < $totalPagesCount) ? $currentPage + 1 : $totalPagesCount);
-        $previousPage = (($currentPage > 1) ? $currentPage - 1 : 1);
-
-        $records = $paginator
-            ->getQuery()
-            ->setFirstResult($this->pageCount * ($currentPage-1)) // set the offset
-            ->setMaxResults($this->pageCount) // set the limit
-            ->getResult(Query::HYDRATE_ARRAY);
-
-        // add hypermedia links
-        $result['Result']['_links']['self'] = $this->urlHelper->generate('/announcements/page/'.$currentPage);
-        $result['Result']['_links']['previous'] = $this->urlHelper->generate('/announcements/page/'.$previousPage);
-        $result['Result']['_links']['next'] = $this->urlHelper->generate('/announcements/page/'.$nextPage);
-        $result['Result']['_links']['last'] = $this->urlHelper->generate('/announcements/page/'.$totalPagesCount);
-        $result['Result']['_links']['create'] = $this->urlHelper->generate('/announcements/');
-        $result['Result']['_links']['read'] = $this->urlHelper->generate('/announcements/');
-        $result['Result']['_per_page'] = $this->pageCount;
-        $result['Result']['_page'] = $currentPage;
-        $result['Result']['_total'] = $totalItems;
-        $result['Result']['_total_pages'] = $totalPagesCount;
-
-        // add record specific hypermedia links
-        foreach ($records as $key => $value) {
-            $records[$key]['_links']['self'] = $this->urlHelper->generate('/announcements/'.$value['id']);
-            $records[$key]['_links']['update'] = $this->urlHelper->generate('/announcements/'.$value['id']);
-            $records[$key]['_links']['delete'] = $this->urlHelper->generate('/announcements/'.$value['id']);
-        }
-
-        $result['Result']['_embedded']['Announcements'] = $records;
-
-        return new JsonResponse($result);
+        $paginator = new AnnouncementCollection($query);
+        $resource  = $this->resourceGenerator->fromObject($paginator, $request);
+        return $this->responseFactory->createResponse($request, $resource);
     }
 }

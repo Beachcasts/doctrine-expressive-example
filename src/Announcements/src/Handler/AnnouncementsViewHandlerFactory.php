@@ -6,7 +6,8 @@ namespace Announcements\Handler;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Helper\ServerUrlHelper;
+use Zend\Expressive\Hal\HalResponseFactory;
+use Zend\Expressive\Hal\ResourceGenerator;
 
 /**
  * Class AnnouncementsViewHandlerFactory
@@ -20,10 +21,10 @@ class AnnouncementsViewHandlerFactory
      */
     public function __invoke(ContainerInterface $container) : AnnouncementsViewHandler
     {
-        $entityManager = $container->get(EntityManager::class);
-
-        $urlHelper = $container->get(ServerUrlHelper::class);
-
-        return new AnnouncementsViewHandler($entityManager, $urlHelper);
+        return new AnnouncementsViewHandler(
+            $container->get(EntityManager::class),
+            $container->get(HalResponseFactory::class),
+            $container->get(ResourceGenerator::class)
+        );
     }
 }
