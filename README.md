@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/Beachcasts/doctrine-expressive-example.svg?style=svg)](https://circleci.com/gh/Beachcasts/doctrine-expressive-example)
+
 # doctrine-expressive-example
 Example PHP REST API application spread across 2 Docker containers. (1=Apache, 2=MySQL) I used [Zend Expressive](https://docs.zendframework.com/zend-expressive/) with [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) in an effort to help document usage of both in a typical scenario. The application leveraged the [zend-expressive-skeleton](https://github.com/zendframework/zend-expressive-skeleton) as a starting point, and was installed set up for Modules using [FastRoute](https://github.com/nikic/FastRoute), [zend-servicemanager](https://github.com/zendframework/zend-servicemanager), and no template engine (since it is a REST API responding with Json).
 
