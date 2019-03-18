@@ -41,10 +41,10 @@ paths:
         content: 
           application/x-www-form-urlencoded: # this can be whatever you want you want the system to accept: application/json, application/xml, text/plain etc. 
             schema:
-              $ref: '#/components/schemas/AnnoucementsForm' # again, breaking individual things apart in order to create a nicer file. When you build this with a docs generator, it will piece it all together.
+              $ref: '#/components/schemas/annoucementsForm' # again, breaking individual things apart in order to create a nicer file. When you build this with a docs generator, it will piece it all together.
       responses: # defined by status code
         200: 
-          $ref: '#/components/responses/AnnoucementResponse'   
+          $ref: '#/components/responses/annoucementResponse'   
         400: 
           description: Bad Request
         401: 
@@ -55,8 +55,44 @@ paths:
           description: The server can't complete the request   
 components: 
   schemas:
+    annoucementResponse: # this is the definition of your response, what kind of data is expected to be returned.. ints, strings, arrays etc.
+      type: object
+      properties:
+        id: 
+          type: string # just a guess based on your schema
+        sort: 
+          type: int
+          format: int32 # just a guess here
+        content: 
+          type: string
+        is_admin: 
+          type: int
+          format: int32
+        is_active: 
+          type: int
+          format: int32
+        created_at: 
+          type: datetime
+        updated_at: 
+          type: datetime          
+    annoucementForm:
+      type: object
+      required: 
+        - annoucementUuid
+      properties:
+        annoucementUuid:
+          type: uuid # not sure if we can do a $ref here to post at the annoucement uuid. Ill find out.       
   parameters:
-    annoucementUuid:
-      
+    annoucementUuid: # this is referenced above
+      name: uuid
+      in: path
+      required: true
+      example: c4a760a8-dbcf-5254-a0d9-6a4474bd1b62
+      schema:
+        type: string
+        pattern: '[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}'
+      description: A universally unique identifier for an annoucement
+
+
 
         
