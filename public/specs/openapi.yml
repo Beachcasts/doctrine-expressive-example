@@ -1,28 +1,62 @@
+# spec: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#pathsObject
 openapi: "3.0.2"
-info:
+info: # meta information for your API
   title: "Beachcasts API"
-  description: ""
-  version: "0.5.0"
+  description: "" # This is to describe the entire application. 
+  version: "0.5.0" # I made this up
   contact: 
     name: "Adam Culp"
     url: "https://beachcasts.com"
-    email: "adam.culp@beachcasts.com"
+    email: "adam.culp@beachcasts.com" # I made this up
   license:
     name: "BSD 3-Clause License"
     url: "https://github.com/Beachcasts/doctrine-expressive-example/blob/master/LICENSE"  
 servers: 
-  - url: 
+  - url: # fill in the blank
     description: "Production API Server"
-  - url: 
+  - url: # fill in the blank
     description: "Staging API Server"
-  - url: 
+  - url: # fill in the blank
     description: "Local Development Server"
 tags: 
-  - name: Annoucements
+  # these are used for API Documentation Control
+  - name: annoucements
     description: Endpoints to work with the Announcements resources
-  - name: Banks
+  - name: banks
     description: Endpoints to work with the Banks resources
-  - name: Branches  
+  - name: branches  
     description: Endpoints to work with the Branches resources
 paths: 
+  #this is where you define your paths/routes. This is an example path
+  /announcements/{announcementUuid}:
+    get: # each action gets it's own definition
+      summary: |
+      This is an endpoint to access and read from an annoucement with a proper identifier. # this is where we tell the user what this endpoint does, what they will get from accessing it and any other meta data they may need.
+      tag: 
+        - annoucements # this is used via API Documentation Control (ReDoc, Widdershins, etc) to keep the docs organized.  
+      operationId: list-annoucement # a unique string per operation. tools may use this in their generated docs.
+      parameters: 
+        - $ref: '#/component/parameters/annoucementUuid' # this points to another spot in the doc where we can define the parameter and keep the doc a little clean
+      requestBody: 
+        content: 
+          application/x-www-form-urlencoded: # this can be whatever you want you want the system to accept: application/json, application/xml, text/plain etc. 
+            schema:
+              $ref: '#/components/schemas/AnnoucementsForm' # again, breaking individual things apart in order to create a nicer file. When you build this with a docs generator, it will piece it all together.
+      responses: # defined by status code
+        200: 
+          $ref: '#/components/responses/AnnoucementResponse'   
+        400: 
+          description: Bad Request
+        401: 
+          description: Not Authorized  
+        418: 
+          description: I'm a teapot 
+        500: 
+          description: The server can't complete the request   
+components: 
+  schemas:
+  parameters:
+    annoucementUuid:
       
+
+        
