@@ -28,7 +28,6 @@ class AnnouncementsUpdateHandler implements RequestHandlerInterface
     /**
      * AnnouncementsUpdateHandler constructor.
      * @param EntityManager $entityManager
-     * @param Announcement $entity
      * @param ServerUrlHelper $urlHelper
      */
     public function __construct(
@@ -56,7 +55,7 @@ class AnnouncementsUpdateHandler implements RequestHandlerInterface
             return new JsonResponse($result, 400);
         }
 
-        $entityRepository = $this->entityManager->getRepository('Announcements\Entity\Announcement');
+        $entityRepository = $this->entityManager->getRepository(Announcement::class);
 
         $entity = $entityRepository->find($request->getAttribute('id'));
 
