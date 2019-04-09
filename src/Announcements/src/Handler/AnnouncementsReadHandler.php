@@ -5,41 +5,39 @@ declare(strict_types=1);
 namespace Announcements\Handler;
 
 use Announcements\Entity\Announcement;
-use Announcements\Entity\AnnouncementCollection;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use RuntimeException;
 use Zend\Expressive\Hal\HalResponseFactory;
 use Zend\Expressive\Hal\ResourceGenerator;
+use Zend\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;
+use Zend\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 
 /**
- * Class AnnouncementsReadHandler
+ * Class AnnouncementsViewHandler
  * @package Announcements\Handler
  */
 class AnnouncementsReadHandler implements RequestHandlerInterface
 {
     protected $entityManager;
-    protected $pageCount;
-    protected $responseFactory;
+    protected $halResponseFactory;
     protected $resourceGenerator;
 
     /**
-     * AnnouncementsReadHandler constructor.
+     * AnnouncementsViewHandler constructor.
      * @param EntityManager $entityManager
-     * @param $pageCount
-     * @param HalResponseFactory $responseFactory
+     * @param HalResponseFactory $halResponseFactory
      * @param ResourceGenerator $resourceGenerator
      */
     public function __construct(
         EntityManager $entityManager,
-        $pageCount,
-        HalResponseFactory $responseFactory,
+        HalResponseFactory $halResponseFactory,
         ResourceGenerator $resourceGenerator
     ) {
         $this->entityManager = $entityManager;
-        $this->pageCount = $pageCount;
-        $this->responseFactory = $responseFactory;
+        $this->halResponseFactory = $halResponseFactory;
         $this->resourceGenerator = $resourceGenerator;
     }
 
@@ -49,16 +47,29 @@ class AnnouncementsReadHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $repository = $this->entityManager->getRepository(Announcement::class);
+        $id               = $request->getAttribute('id', null);
+        $entityRepository = $this->entityManager->getRepository(Announcement::class);
+        $entity           = $entityRepository->find($id);
 
-        $query = $repository
-            ->createQueryBuilder('a')
-            ->addOrderBy('a.sort', 'asc')
-            ->setMaxResults($this->pageCount)
-            ->getQuery();
+        if (empty($entity)) {
 
-        $paginator = new AnnouncementCollection($query);
-        $resource  = $this->resourceGenerator->fromObject($paginator, $request);
-        return $this->responseFactory->createResponse($request, $resource);
+            $problem = new class ($id) extends RuntimeException implements ProblemDetailsExceptionInterface {
+                use CommonProblemDetailsExceptionTrait;
+
+                public function __construct(?string $id)
+                {
+                    $this->detail = sprintf('Unable to find an announcement with ID "%s"', (string) $id);
+                    $this->status = 404;
+                    $this->title  = 'Record not found.';
+                    $this->type = 'error.announcement.not-found';
+                    parent::__construct($this->detail, $this->status);
+                }
+            };
+
+            throw $problem;
+        }
+
+        $resource = $this->resourceGenerator->fromObject($entity, $request);
+        return $this->halResponseFactory->createResponse($request, $resource);
     }
 }

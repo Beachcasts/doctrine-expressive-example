@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Announcements\Handler;
 
+use Announcements\Entity\Announcement;
 use Doctrine\ORM\ORMException;
 use Zend\Expressive\Helper\ServerUrlHelper;
 use Doctrine\ORM\EntityManager;
@@ -38,7 +39,7 @@ class AnnouncementsDeleteHandler implements RequestHandlerInterface
     {
         $result = [];
 
-        $entityRepository = $this->entityManager->getRepository('Announcements\Entity\Announcement');
+        $entityRepository = $this->entityManager->getRepository(Announcement::class);
 
         $entity = $entityRepository->find($request->getAttribute('id'));
 
