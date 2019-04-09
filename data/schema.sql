@@ -18,6 +18,17 @@ CREATE TABLE `announcements` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='news/announcements to display on client dashboard';
 
 --
+-- Dumping data for table `announcements`
+--
+
+LOCK TABLES `announcements` WRITE;
+
+INSERT INTO `announcements` (`id`, `sort`, `content`, `is_admin`, `is_active`, `created`, `modified`) VALUES ('05f53428-f50a-4f39-b6fc-c48b695ebf31',60,'This is a sample announcement #6',1,1,'2019-02-02 22:03:10','2019-02-02 22:03:10'),('0bed4d49-4d0c-4f53-8e4e-5ceaaed615c3',40,'This is a sample announcement #4',1,1,'2019-02-02 22:02:59','2019-02-02 22:02:59'),('8ef8c7da-bdb0-4273-8ff6-a4171832ac0a',30,'This is a sample announcement #3',1,1,'2019-02-02 22:02:56','2019-02-02 22:02:56'),('c3324896-d482-4aee-a303-ec9672494a1a',10,'This is a sample announcement #1',1,1,'2019-01-23 16:21:25','2019-01-23 16:21:25'),('c870b5b6-5d85-49a4-9a91-56410ac09ccd',20,'This is a sample announcement #2',1,1,'2019-02-02 22:02:50','2019-02-02 22:02:50'),('dc73ebe0-7959-4718-b5ce-9831bfc1ecd8',50,'This is a sample announcement #5',1,1,'2019-02-02 22:03:02','2019-02-02 22:03:02');
+
+UNLOCK TABLES;
+
+
+--
 -- Table structure for table `branches`
 --
 
