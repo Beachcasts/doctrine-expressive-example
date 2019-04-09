@@ -25,14 +25,14 @@ class RoutesDelegator
 
         $app->get('/announcements/{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}[/]', [
                 ProblemDetailsMiddleware::class,
-                Handler\AnnouncementsViewHandler::class,
-            ], 'announcements.view');
-
-        $app->get('/announcements/[?page={page:\d+}]', Handler\AnnouncementsReadHandler::class, 'announcements.read');
+                Handler\AnnouncementsReadHandler::class,
+            ], 'announcements.read');
 
         $app->put('/announcements/{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}[/]', Handler\AnnouncementsUpdateHandler::class, 'announcements.update');
 
         $app->delete('/announcements/{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}[/]', Handler\AnnouncementsDeleteHandler::class, 'announcements.delete');
+
+        $app->get('/announcements/[?page={page:\d+}]', Handler\AnnouncementsListHandler::class, 'announcements.list');
 
         return $app;
     }

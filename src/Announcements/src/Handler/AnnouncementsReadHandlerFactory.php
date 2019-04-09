@@ -10,7 +10,7 @@ use Zend\Expressive\Hal\HalResponseFactory;
 use Zend\Expressive\Hal\ResourceGenerator;
 
 /**
- * Class AnnouncementsReadHandlerFactory
+ * Class AnnouncementsViewHandlerFactory
  * @package Announcements\Handler
  */
 class AnnouncementsReadHandlerFactory
@@ -21,11 +21,10 @@ class AnnouncementsReadHandlerFactory
      */
     public function __invoke(ContainerInterface $container) : AnnouncementsReadHandler
     {
-        $entityManager = $container->get(EntityManager::class);
-
-        $resourceGenerator = $container->get(ResourceGenerator::class);
-        $responseFactory = $container->get(HalResponseFactory::class);
-
-        return new AnnouncementsReadHandler($entityManager, $container->get('config')['page_size'], $responseFactory, $resourceGenerator);
+        return new AnnouncementsReadHandler(
+            $container->get(EntityManager::class),
+            $container->get(HalResponseFactory::class),
+            $container->get(ResourceGenerator::class)
+        );
     }
 }
