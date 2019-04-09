@@ -47,9 +47,9 @@ class AnnouncementsReadHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $id               = $request->getAttribute('id', null);
-        $entityRepository = $this->entityManager->getRepository(Announcement::class);
-        $entity           = $entityRepository->find($id);
+        $id = $request->getAttribute('id', null);
+        $repository = $this->entityManager->getRepository(Announcement::class);
+        $entity = $repository->find($id);
 
         if (empty($entity)) {
 
