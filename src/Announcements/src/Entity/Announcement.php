@@ -38,11 +38,6 @@ class Announcement
     /**
      * @ORM\Column(type="integer", nullable=false)
      */
-    protected $is_admin;
-
-    /**
-     * @ORM\Column(type="integer", nullable=false)
-     */
     protected $is_active;
 
     /**
@@ -65,7 +60,6 @@ class Announcement
             'id' => $this->getId(),
             'sort' => $this->getSort(),
             'content' => $this->getContent(),
-            'is_admin' => $this->getIsAdmin(),
             'is_active' => $this->getIsActive(),
             'created' => $this->getCreated()->format('Y-m-d H:i:s'),
             'modified' => $this->getModified()->format('Y-m-d H:i:s')
@@ -80,7 +74,6 @@ class Announcement
     {
         $this->setSort($requestBody['sort']);
         $this->setContent($requestBody['content']);
-        $this->setIsAdmin($requestBody['is_admin']);
         $this->setModified(new \DateTime("now"));
 
         if (!isset($requestBody['is_active']))
@@ -129,22 +122,6 @@ class Announcement
     public function setContent(string $content): void
     {
         $this->content = $content;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIsAdmin(): int
-    {
-        return $this->is_admin;
-    }
-
-    /**
-     * @param int $is_admin
-     */
-    public function setIsAdmin(int $is_admin): void
-    {
-        $this->is_admin = $is_admin;
     }
 
     /**
