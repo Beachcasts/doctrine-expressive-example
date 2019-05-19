@@ -93,7 +93,7 @@ class Branch
      * @param bool $withBank
      * @return array
      */
-    public function getBranch($withBank=false): array
+    public function getBranch($recursive=false): array
     {
         $branch = [
             'id' => $this->getId(),
@@ -110,7 +110,7 @@ class Branch
             'modified' => $this->getModified()->format('Y-m-d H:i:s'),
         ];
 
-        if ($withBank) {
+        if ($recursive) {
             $branch['bank'] = $this->getBank();
         }
 
