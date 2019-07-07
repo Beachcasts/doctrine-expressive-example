@@ -20,9 +20,11 @@
     },
     "require": {
         "php": "^7.2",
+        "behat/behat": "3.*",
         "dasprid/container-interop-doctrine": "1.1.0",
         "doctrine/dbal": "^2.8",
         "doctrine/orm": "^2.6",
+        "guzzlehttp/guzzle": "6.3.*",
         "ramsey/uuid-doctrine": "^1.5",
         "zendframework/zend-component-installer": "^2.1.1",
         "zendframework/zend-config-aggregator": "^1.0",
