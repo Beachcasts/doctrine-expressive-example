@@ -67,3 +67,7 @@ Then from the root prompt the CLI tools are available. Example commands are:
 ## Constructive advice welcome
 
 This code is an example, but any advice to help make this a more awesome teaching tool is welcome. Please submit a ticket with details, or better yet, submit a pull request. Thank you.
+
+## Behavioral API testing
+
+coming soon
