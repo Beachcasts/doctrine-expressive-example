@@ -26,7 +26,7 @@
 FROM php:7.2-apache
 
 RUN apt-get update \
- && apt-get install -y vim git zlib1g-dev mysql-client libzip-dev \
+ && apt-get install -y vim git zlib1g-dev mariadb-client libzip-dev \
  && docker-php-ext-install zip mysqli pdo_mysql \
  && pecl install xdebug \
  && docker-php-ext-enable xdebug \
