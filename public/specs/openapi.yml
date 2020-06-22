@@ -1,0 +1,98 @@
+# spec: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#pathsObject
+openapi: "3.0.2"
+info: # meta information for your API
+  title: "Beachcasts API"
+  description: "" # This is to describe the entire application. 
+  version: "0.5.0" # I made this up
+  contact: 
+    name: "Adam Culp"
+    url: "https://beachcasts.com"
+    email: "adam.culp@beachcasts.com" # I made this up
+  license:
+    name: "BSD 3-Clause License"
+    url: "https://github.com/Beachcasts/doctrine-expressive-example/blob/master/LICENSE"  
+servers: 
+  - url: # fill in the blank
+    description: "Production API Server"
+  - url: # fill in the blank
+    description: "Staging API Server"
+  - url: # fill in the blank
+    description: "Local Development Server"
+tags: 
+  # these are used for API Documentation Control
+  - name: annoucements
+    description: Endpoints to work with the Announcements resources
+  - name: banks
+    description: Endpoints to work with the Banks resources
+  - name: branches  
+    description: Endpoints to work with the Branches resources
+paths: 
+  #this is where you define your paths/routes. This is an example path
+  /announcements/{announcementUuid}:
+    get: # each action gets it's own definition
+      summary: |
+      This is an endpoint to access and read from an annoucement with a proper identifier. # this is where we tell the user what this endpoint does, what they will get from accessing it and any other meta data they may need.
+      tag: 
+        - annoucements # this is used via API Documentation Control (ReDoc, Widdershins, etc) to keep the docs organized.  
+      operationId: list-annoucement # a unique string per operation. tools may use this in their generated docs.
+      parameters: 
+        - $ref: '#/component/parameters/annoucementUuid' # this points to another spot in the doc where we can define the parameter and keep the doc a little clean
+      requestBody: 
+        content: 
+          application/x-www-form-urlencoded: # this can be whatever you want you want the system to accept: application/json, application/xml, text/plain etc. 
+            schema:
+              $ref: '#/components/schemas/annoucementsForm' # again, breaking individual things apart in order to create a nicer file. When you build this with a docs generator, it will piece it all together.
+      responses: # defined by status code
+        200: 
+          $ref: '#/components/responses/annoucementResponse'   
+        400: 
+          description: Bad Request
+        401: 
+          description: Not Authorized  
+        418: 
+          description: I'm a teapot 
+        500: 
+          description: The server can't complete the request   
+components: 
+  schemas:
+    annoucementResponse: # this is the definition of your response, what kind of data is expected to be returned.. ints, strings, arrays etc.
+      type: object
+      properties:
+        id: 
+          type: string # just a guess based on your schema
+        sort: 
+          type: int
+          format: int32 # just a guess here
+        content: 
+          type: string
+        is_admin: 
+          type: int
+          format: int32
+        is_active: 
+          type: int
+          format: int32
+        created_at: 
+          type: datetime
+        updated_at: 
+          type: datetime          
+    annoucementForm:
+      type: object
+      required: 
+        - annoucementUuid
+      properties:
+        annoucementUuid:
+          type: uuid # not sure if we can do a $ref here to post at the annoucement uuid. Ill find out.       
+  parameters:
+    annoucementUuid: # this is referenced above
+      name: uuid
+      in: path
+      required: true
+      example: c4a760a8-dbcf-5254-a0d9-6a4474bd1b62
+      schema:
+        type: string
+        pattern: '[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}'
+      description: A universally unique identifier for an annoucement
+
+
+
+        
